@@ -5,8 +5,8 @@ const svgData = {
   <path d="M 600 0 L 700 600 L 550 600 Z" fill="#1e3f1a" />
   <path d="M 300 0 L 320 600 L 280 600 Z" fill="#1a3315" />
   <circle cx="100" cy="50" r="80" fill="#3a7c31" />
-  <circle cx="700" cy="80" r="100" fill="#3a7c31" />
-  <circle cx="400" cy="-20" r="120" fill="#3a7c31" />
+  <circle cx="600" cy="80" r="100" fill="#3a7c31" />
+  <circle cx="300" cy="-20" r="120" fill="#3a7c31" />
 </svg>`,
 
     birdUp: `<svg width="60" height="40" xmlns="http://www.w3.org/2000/svg">

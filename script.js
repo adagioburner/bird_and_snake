@@ -100,6 +100,8 @@ const bird = {
     moveTimer: 0
 };
 
+const SNAKE_COIL_DURATION = 1.0;
+
 // Snake
 const snake = {
     x: 0,
@@ -160,7 +162,7 @@ function update(deltaTime) {
     if (bird.x < 0) { bird.x = 0; bird.directionX = 1; }
     if (bird.x + bird.width > GAME_WIDTH) { bird.x = GAME_WIDTH - bird.width; bird.directionX = -1; }
     if (bird.y < 0) { bird.y = 0; bird.directionY = 1; }
-    if (bird.y > 150) { bird.y = 150; bird.directionY = -1; }
+    if (bird.y > GAME_HEIGHT / 3) { bird.y = GAME_HEIGHT / 3; bird.directionY = -1; }
 
     // Bird animation
     bird.flapTimer += deltaTime;
@@ -201,7 +203,7 @@ function update(deltaTime) {
             hitSnake = true;
             score++;
             snake.state = 'coiled';
-            snake.coilTimer = 1.0; // hiss and coil for 1 second
+            snake.coilTimer = SNAKE_COIL_DURATION; // hiss and coil for 1 second
             apples.splice(i, 1);
             i--;
             checkGameEnd();
@@ -286,4 +288,19 @@ function gameLoop(timestamp) {
     draw();
 
     requestAnimationFrame(gameLoop);
+}
+
+// Expose game state for testing purposes
+if (typeof window !== 'undefined') {
+    window.gameState = {
+        get bird() { return bird; },
+        get snake() { return snake; },
+        get apples() { return apples; },
+        get score() { return score; },
+        get gameOver() { return gameOver; },
+        set gameOver(val) { gameOver = val; },
+        get GAME_HEIGHT() { return GAME_HEIGHT; },
+        get GAME_WIDTH() { return GAME_WIDTH; },
+        get SNAKE_COIL_DURATION() { return SNAKE_COIL_DURATION; }
+    };
 }

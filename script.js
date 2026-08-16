@@ -14,7 +14,7 @@ const svgData = {
   <circle cx="45" cy="20" r="10" fill="#ffcc00" />
   <polygon points="53,20 60,23 53,26" fill="#ff6600" />
   <circle cx="47" cy="17" r="2" fill="#000" />
-  <path d="M 25 20 Q 20 0 10 5 Q 15 15 25 20" fill="#ffaa00" />
+  <path d="M 35 20 Q 30 0 20 5 Q 25 15 35 20" fill="#ffaa00" />
 </svg>`,
 
     birdDown: `<svg width="60" height="40" xmlns="http://www.w3.org/2000/svg">
@@ -22,7 +22,7 @@ const svgData = {
   <circle cx="45" cy="20" r="10" fill="#ffcc00" />
   <polygon points="53,20 60,23 53,26" fill="#ff6600" />
   <circle cx="47" cy="17" r="2" fill="#000" />
-  <path d="M 25 25 Q 20 40 10 35 Q 15 25 25 25" fill="#ffaa00" />
+  <path d="M 35 25 Q 30 40 20 35 Q 25 25 35 25" fill="#ffaa00" />
 </svg>`,
 
     snakeMoving: `<svg width="80" height="40" xmlns="http://www.w3.org/2000/svg">

@@ -287,3 +287,15 @@ function gameLoop(timestamp) {
 
     requestAnimationFrame(gameLoop);
 }
+
+// Expose game state for testing purposes
+if (typeof window !== 'undefined') {
+    window.gameState = {
+        get bird() { return bird; },
+        get snake() { return snake; },
+        get apples() { return apples; },
+        get score() { return score; },
+        get gameOver() { return gameOver; },
+        set gameOver(val) { gameOver = val; }
+    };
+}

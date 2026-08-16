@@ -149,8 +149,9 @@ test.describe('Bird and Snake Game Tests', () => {
     const newScore = await page.evaluate(() => window.gameState.score);
     expect(newScore).toBe(initialScore + 1);
 
-    // Wait for coil timer to expire (1 second in code)
-    await page.waitForTimeout(1050);
+    // Wait for coil timer to expire (with a tiny buffer)
+    const coilDurationMs = await page.evaluate(() => window.gameState.SNAKE_COIL_DURATION * 1000);
+    await page.waitForTimeout(coilDurationMs + 50);
 
     // Verify snake resumes movement
     const resumedState = await page.evaluate(() => window.gameState.snake.state);

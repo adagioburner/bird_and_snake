@@ -100,6 +100,8 @@ const bird = {
     moveTimer: 0
 };
 
+const SNAKE_COIL_DURATION = 1.0;
+
 // Snake
 const snake = {
     x: 0,
@@ -201,7 +203,7 @@ function update(deltaTime) {
             hitSnake = true;
             score++;
             snake.state = 'coiled';
-            snake.coilTimer = 1.0; // hiss and coil for 1 second
+            snake.coilTimer = SNAKE_COIL_DURATION; // hiss and coil for 1 second
             apples.splice(i, 1);
             i--;
             checkGameEnd();
@@ -298,6 +300,7 @@ if (typeof window !== 'undefined') {
         get gameOver() { return gameOver; },
         set gameOver(val) { gameOver = val; },
         get GAME_HEIGHT() { return GAME_HEIGHT; },
-        get GAME_WIDTH() { return GAME_WIDTH; }
+        get GAME_WIDTH() { return GAME_WIDTH; },
+        get SNAKE_COIL_DURATION() { return SNAKE_COIL_DURATION; }
     };
 }

@@ -38,6 +38,20 @@ const svgData = {
   <path d="M 4 25 L 0 25 M 0 25 L -2 23 M 0 25 L -2 27" fill="none" stroke="#ff0000" stroke-width="1" />
 </svg>`,
 
+    snakeMoving2: `<svg width="80" height="40" xmlns="http://www.w3.org/2000/svg">
+  <path d="M 10 30 Q 20 40 30 30 T 50 30 T 70 25" fill="none" stroke="#00cc00" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="70" cy="25" r="6" fill="#00cc00" />
+  <circle cx="72" cy="23" r="1.5" fill="#000" />
+  <path d="M 76 25 L 80 25 M 80 25 L 82 23 M 80 25 L 82 27" fill="none" stroke="#ff0000" stroke-width="1" />
+</svg>`,
+
+    snakeMovingLeft2: `<svg width="80" height="40" xmlns="http://www.w3.org/2000/svg">
+  <path d="M 70 30 Q 60 40 50 30 T 30 30 T 10 25" fill="none" stroke="#00cc00" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="10" cy="25" r="6" fill="#00cc00" />
+  <circle cx="8" cy="23" r="1.5" fill="#000" />
+  <path d="M 4 25 L 0 25 M 0 25 L -2 23 M 0 25 L -2 27" fill="none" stroke="#ff0000" stroke-width="1" />
+</svg>`,
+
     snakeCoiled: `<svg width="80" height="40" xmlns="http://www.w3.org/2000/svg">
   <ellipse cx="40" cy="35" rx="25" ry="5" fill="#00cc00" />
   <ellipse cx="40" cy="30" rx="20" ry="5" fill="#009900" />
@@ -111,7 +125,9 @@ const snake = {
     speed: 150,
     direction: 1,
     state: 'moving', // 'moving', 'coiled'
-    coilTimer: 0
+    coilTimer: 0,
+    wiggleTimer: 0,
+    isWiggling: false
 };
 
 // Apples
@@ -181,6 +197,12 @@ function update(deltaTime) {
             snake.x = 0;
             snake.direction = 1;
         }
+
+        snake.wiggleTimer += deltaTime;
+        if (snake.wiggleTimer > 0.15) {
+            snake.isWiggling = !snake.isWiggling;
+            snake.wiggleTimer = 0;
+        }
     } else if (snake.state === 'coiled') {
         snake.coilTimer -= deltaTime;
         if (snake.coilTimer <= 0) {
@@ -235,7 +257,13 @@ function draw() {
     ctx.drawImage(images.background, 0, 0);
 
     // Snake
-    let snakeImage = snake.direction === 1 ? images.snakeMoving : images.snakeMovingLeft;
+    let snakeImage;
+    if (snake.direction === 1) {
+        snakeImage = snake.isWiggling ? images.snakeMoving2 : images.snakeMoving;
+    } else {
+        snakeImage = snake.isWiggling ? images.snakeMovingLeft2 : images.snakeMovingLeft;
+    }
+
     if (snake.state === 'coiled') {
         snakeImage = images.snakeCoiled;
     }

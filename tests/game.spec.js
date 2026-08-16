@@ -45,7 +45,7 @@ test.describe('Bird and Snake Game Tests', () => {
 
     // Manually push the snake to the edge to test reversal
     await page.evaluate(() => {
-        window.gameState.snake.x = 790;
+        window.gameState.snake.x = window.gameState.GAME_WIDTH - 10;
         window.gameState.snake.direction = 1;
     });
 

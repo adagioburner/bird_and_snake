@@ -296,6 +296,8 @@ if (typeof window !== 'undefined') {
         get apples() { return apples; },
         get score() { return score; },
         get gameOver() { return gameOver; },
-        set gameOver(val) { gameOver = val; }
+        set gameOver(val) { gameOver = val; },
+        get GAME_HEIGHT() { return GAME_HEIGHT; },
+        get GAME_WIDTH() { return GAME_WIDTH; }
     };
 }

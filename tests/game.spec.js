@@ -74,7 +74,7 @@ test.describe('Bird and Snake Game Tests', () => {
     }
 
     // Verify Y constraint (the top part, e.g., 0 to GAME_HEIGHT/3 based on code)
-    const maxHeight = await page.evaluate(() => 600 / 3);
+    const maxHeight = await page.evaluate(() => window.gameState.GAME_HEIGHT / 3);
     for (const y of yPositions) {
         expect(y).toBeGreaterThanOrEqual(0);
         expect(y).toBeLessThanOrEqual(maxHeight);
@@ -170,7 +170,7 @@ test.describe('Bird and Snake Game Tests', () => {
         window.gameState.apples.length = 0; // Clear existing
         window.gameState.apples.push({
             x: 100,
-            y: 590, // GAME_HEIGHT is 600
+            y: window.gameState.GAME_HEIGHT - 10,
             width: 20,
             height: 20
         });

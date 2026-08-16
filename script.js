@@ -9,7 +9,7 @@ const svgData = {
   <circle cx="300" cy="-20" r="120" fill="#3a7c31" />
 </svg>`,
 
-    birdUp: `<svg width="60" height="40" xmlns="http://www.w3.org/2000/svg">
+    birdFlying1: `<svg width="60" height="40" xmlns="http://www.w3.org/2000/svg">
   <ellipse cx="30" cy="25" rx="20" ry="10" fill="#ffcc00" />
   <circle cx="45" cy="20" r="10" fill="#ffcc00" />
   <polygon points="53,20 60,23 53,26" fill="#ff6600" />
@@ -17,7 +17,7 @@ const svgData = {
   <path d="M 35 20 Q 30 0 20 5 Q 25 15 35 20" fill="#ffaa00" />
 </svg>`,
 
-    birdDown: `<svg width="60" height="40" xmlns="http://www.w3.org/2000/svg">
+    birdFlying2: `<svg width="60" height="40" xmlns="http://www.w3.org/2000/svg">
   <ellipse cx="30" cy="25" rx="20" ry="10" fill="#ffcc00" />
   <circle cx="45" cy="20" r="10" fill="#ffcc00" />
   <polygon points="53,20 60,23 53,26" fill="#ff6600" />
@@ -25,14 +25,28 @@ const svgData = {
   <path d="M 35 25 Q 30 40 20 35 Q 25 25 35 25" fill="#ffaa00" />
 </svg>`,
 
-    snakeMoving: `<svg width="80" height="40" xmlns="http://www.w3.org/2000/svg">
+    snakeMovingRight1: `<svg width="80" height="40" xmlns="http://www.w3.org/2000/svg">
   <path d="M 10 30 Q 20 20 30 30 T 50 30 T 70 25" fill="none" stroke="#00cc00" stroke-width="8" stroke-linecap="round"/>
   <circle cx="70" cy="25" r="6" fill="#00cc00" />
   <circle cx="72" cy="23" r="1.5" fill="#000" />
   <path d="M 76 25 L 80 25 M 80 25 L 82 23 M 80 25 L 82 27" fill="none" stroke="#ff0000" stroke-width="1" />
 </svg>`,
-    snakeMovingLeft: `<svg width="80" height="40" xmlns="http://www.w3.org/2000/svg">
+    snakeMovingLeft1: `<svg width="80" height="40" xmlns="http://www.w3.org/2000/svg">
   <path d="M 70 30 Q 60 20 50 30 T 30 30 T 10 25" fill="none" stroke="#00cc00" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="10" cy="25" r="6" fill="#00cc00" />
+  <circle cx="8" cy="23" r="1.5" fill="#000" />
+  <path d="M 4 25 L 0 25 M 0 25 L -2 23 M 0 25 L -2 27" fill="none" stroke="#ff0000" stroke-width="1" />
+</svg>`,
+
+    snakeMovingRight2: `<svg width="80" height="40" xmlns="http://www.w3.org/2000/svg">
+  <path d="M 10 30 Q 20 40 30 30 T 50 30 T 70 25" fill="none" stroke="#00cc00" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="70" cy="25" r="6" fill="#00cc00" />
+  <circle cx="72" cy="23" r="1.5" fill="#000" />
+  <path d="M 76 25 L 80 25 M 80 25 L 82 23 M 80 25 L 82 27" fill="none" stroke="#ff0000" stroke-width="1" />
+</svg>`,
+
+    snakeMovingLeft2: `<svg width="80" height="40" xmlns="http://www.w3.org/2000/svg">
+  <path d="M 70 30 Q 60 40 50 30 T 30 30 T 10 25" fill="none" stroke="#00cc00" stroke-width="8" stroke-linecap="round"/>
   <circle cx="10" cy="25" r="6" fill="#00cc00" />
   <circle cx="8" cy="23" r="1.5" fill="#000" />
   <path d="M 4 25 L 0 25 M 0 25 L -2 23 M 0 25 L -2 27" fill="none" stroke="#ff0000" stroke-width="1" />
@@ -111,7 +125,9 @@ const snake = {
     speed: 150,
     direction: 1,
     state: 'moving', // 'moving', 'coiled'
-    coilTimer: 0
+    coilTimer: 0,
+    wiggleTimer: 0,
+    wiggleState: 1 // 1 or 2
 };
 
 // Apples
@@ -181,6 +197,12 @@ function update(deltaTime) {
             snake.x = 0;
             snake.direction = 1;
         }
+
+        snake.wiggleTimer += deltaTime;
+        if (snake.wiggleTimer > 0.15) {
+            snake.wiggleState = snake.wiggleState === 1 ? 2 : 1;
+            snake.wiggleTimer = 0;
+        }
     } else if (snake.state === 'coiled') {
         snake.coilTimer -= deltaTime;
         if (snake.coilTimer <= 0) {
@@ -235,7 +257,13 @@ function draw() {
     ctx.drawImage(images.background, 0, 0);
 
     // Snake
-    let snakeImage = snake.direction === 1 ? images.snakeMoving : images.snakeMovingLeft;
+    let snakeImage;
+    if (snake.direction === 1) {
+        snakeImage = snake.wiggleState === 2 ? images.snakeMovingRight2 : images.snakeMovingRight1;
+    } else {
+        snakeImage = snake.wiggleState === 2 ? images.snakeMovingLeft2 : images.snakeMovingLeft1;
+    }
+
     if (snake.state === 'coiled') {
         snakeImage = images.snakeCoiled;
     }
@@ -244,7 +272,7 @@ function draw() {
     ctx.drawImage(snakeImage, snake.x, snake.y);
 
     // Bird
-    const birdImage = bird.isFlappingUp ? images.birdUp : images.birdDown;
+    const birdImage = bird.isFlappingUp ? images.birdFlying1 : images.birdFlying2;
 
     // Flip bird if moving left
     ctx.save();

@@ -39,14 +39,14 @@ test.describe('Bird and Snake Game Tests', () => {
 
     for (let i = 0; i < 10; i++) {
         await page.waitForTimeout(100);
-        const isWiggling = await page.evaluate(() => window.gameState.snake.isWiggling);
-        wigglingStates.add(isWiggling);
+        const wiggleState = await page.evaluate(() => window.gameState.snake.wiggleState);
+        wigglingStates.add(wiggleState);
     }
 
     // Verify it wiggles (toggles state)
-    expect(wigglingStates.size).toBe(2); // Should have both true and false
-    expect(wigglingStates.has(true)).toBeTruthy();
-    expect(wigglingStates.has(false)).toBeTruthy();
+    expect(wigglingStates.size).toBe(2); // Should have both 1 and 2
+    expect(wigglingStates.has(1)).toBeTruthy();
+    expect(wigglingStates.has(2)).toBeTruthy();
   });
 
   test('The snake moves from one side of the screen to the other', async ({ page }) => {

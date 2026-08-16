@@ -56,7 +56,9 @@ test.describe('Bird and Snake Game Tests', () => {
 
     // Direction should flip to -1, so it shouldn't just keep growing indefinitely without limit
     expect(reversedDirection).toBe(-1);
-    expect(reversedX).toBeLessThanOrEqual(800);
+
+    const gameWidth = await page.evaluate(() => window.gameState.GAME_WIDTH);
+    expect(reversedX).toBeLessThanOrEqual(gameWidth);
   });
 
   test('The bird flies in the top part of the screen and flaps its wings', async ({ page }) => {

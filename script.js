@@ -160,7 +160,7 @@ function update(deltaTime) {
     if (bird.x < 0) { bird.x = 0; bird.directionX = 1; }
     if (bird.x + bird.width > GAME_WIDTH) { bird.x = GAME_WIDTH - bird.width; bird.directionX = -1; }
     if (bird.y < 0) { bird.y = 0; bird.directionY = 1; }
-    if (bird.y > 150) { bird.y = 150; bird.directionY = -1; }
+    if (bird.y > GAME_HEIGHT / 3) { bird.y = GAME_HEIGHT / 3; bird.directionY = -1; }
 
     // Bird animation
     bird.flapTimer += deltaTime;

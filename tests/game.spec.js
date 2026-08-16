@@ -73,10 +73,11 @@ test.describe('Bird and Snake Game Tests', () => {
         flappingStates.add(isFlappingUp);
     }
 
-    // Verify Y constraint (the top part, e.g., 0 to 150 based on code)
+    // Verify Y constraint (the top part, e.g., 0 to GAME_HEIGHT/3 based on code)
+    const maxHeight = await page.evaluate(() => 600 / 3);
     for (const y of yPositions) {
         expect(y).toBeGreaterThanOrEqual(0);
-        expect(y).toBeLessThanOrEqual(150);
+        expect(y).toBeLessThanOrEqual(maxHeight);
     }
 
     // Verify it flaps its wings

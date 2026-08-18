@@ -215,14 +215,12 @@ function update(deltaTime) {
         apples[i].y += appleSpeed * deltaTime;
 
         // Collision detection with snake
-        let hitSnake = false;
         if (
             apples[i].x < snake.x + snake.width &&
             apples[i].x + apples[i].width > snake.x &&
             apples[i].y < snake.y + snake.height &&
             apples[i].y + apples[i].height > snake.y
         ) {
-            hitSnake = true;
             score++;
             snake.state = 'coiled';
             snake.coilTimer = SNAKE_COIL_DURATION; // hiss and coil for 1 second

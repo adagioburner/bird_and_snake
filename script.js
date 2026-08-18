@@ -31,25 +31,12 @@ const svgData = {
   <circle cx="72" cy="23" r="1.5" fill="#000" />
   <path d="M 76 25 L 80 25 M 80 25 L 82 23 M 80 25 L 82 27" fill="none" stroke="#ff0000" stroke-width="1" />
 </svg>`,
-    snakeMovingLeft1: `<svg width="80" height="40" xmlns="http://www.w3.org/2000/svg">
-  <path d="M 70 30 Q 60 20 50 30 T 30 30 T 10 25" fill="none" stroke="#00cc00" stroke-width="8" stroke-linecap="round"/>
-  <circle cx="10" cy="25" r="6" fill="#00cc00" />
-  <circle cx="8" cy="23" r="1.5" fill="#000" />
-  <path d="M 4 25 L 0 25 M 0 25 L -2 23 M 0 25 L -2 27" fill="none" stroke="#ff0000" stroke-width="1" />
-</svg>`,
 
     snakeMovingRight2: `<svg width="80" height="40" xmlns="http://www.w3.org/2000/svg">
   <path d="M 10 30 Q 20 40 30 30 T 50 30 T 70 25" fill="none" stroke="#00cc00" stroke-width="8" stroke-linecap="round"/>
   <circle cx="70" cy="25" r="6" fill="#00cc00" />
   <circle cx="72" cy="23" r="1.5" fill="#000" />
   <path d="M 76 25 L 80 25 M 80 25 L 82 23 M 80 25 L 82 27" fill="none" stroke="#ff0000" stroke-width="1" />
-</svg>`,
-
-    snakeMovingLeft2: `<svg width="80" height="40" xmlns="http://www.w3.org/2000/svg">
-  <path d="M 70 30 Q 60 40 50 30 T 30 30 T 10 25" fill="none" stroke="#00cc00" stroke-width="8" stroke-linecap="round"/>
-  <circle cx="10" cy="25" r="6" fill="#00cc00" />
-  <circle cx="8" cy="23" r="1.5" fill="#000" />
-  <path d="M 4 25 L 0 25 M 0 25 L -2 23 M 0 25 L -2 27" fill="none" stroke="#ff0000" stroke-width="1" />
 </svg>`,
 
     snakeCoiled: `<svg width="80" height="40" xmlns="http://www.w3.org/2000/svg">
@@ -256,18 +243,22 @@ function draw() {
 
     // Snake
     let snakeImage;
-    if (snake.direction === 1) {
-        snakeImage = snake.wiggleState === 2 ? images.snakeMovingRight2 : images.snakeMovingRight1;
-    } else {
-        snakeImage = snake.wiggleState === 2 ? images.snakeMovingLeft2 : images.snakeMovingLeft1;
-    }
-
     if (snake.state === 'coiled') {
         snakeImage = images.snakeCoiled;
+    } else {
+        snakeImage = snake.wiggleState === 2 ? images.snakeMovingRight2 : images.snakeMovingRight1;
     }
 
-    // Flip snake context if moving left (or we can just use another image which we created)
-    ctx.drawImage(snakeImage, snake.x, snake.y);
+    // Flip snake context if moving left
+    ctx.save();
+    if (snake.direction === -1 && snake.state !== 'coiled') {
+        ctx.translate(snake.x + snake.width, snake.y);
+        ctx.scale(-1, 1);
+        ctx.drawImage(snakeImage, 0, 0);
+    } else {
+        ctx.drawImage(snakeImage, snake.x, snake.y);
+    }
+    ctx.restore();
 
     // Bird
     const birdImage = bird.isFlappingUp ? images.birdFlying1 : images.birdFlying2;

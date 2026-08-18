@@ -176,6 +176,26 @@ test.describe('Bird and Snake Game Tests', () => {
     expect(resumedState).toBe('moving');
   });
 
+  test('The apple is not dropped when the space bar is pressed if the game is over', async ({ page }) => {
+    await page.goto(pageUrl);
+
+    // Set game over to true
+    await page.evaluate(() => {
+        window.gameState.gameOver = true;
+    });
+
+    // Initial apples count
+    const initialCount = await page.evaluate(() => window.gameState.apples.length);
+    expect(initialCount).toBe(0);
+
+    // Press spacebar
+    await page.keyboard.press('Space');
+
+    // Verify apple was not added
+    const afterDropCount = await page.evaluate(() => window.gameState.apples.length);
+    expect(afterDropCount).toBe(0);
+  });
+
   test('The apple disappears at the bottom of the screen and score decreases', async ({ page }) => {
     await page.goto(pageUrl);
 

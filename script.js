@@ -314,8 +314,11 @@ if (typeof window !== 'undefined') {
         get snake() { return snake; },
         get apples() { return apples; },
         get score() { return score; },
+        set score(val) { score = val; },
         get gameOver() { return gameOver; },
         set gameOver(val) { gameOver = val; },
+        get gameStatus() { return gameStatus; },
+        checkGameEnd: checkGameEnd,
         get GAME_HEIGHT() { return GAME_HEIGHT; },
         get GAME_WIDTH() { return GAME_WIDTH; },
         get SNAKE_COIL_DURATION() { return SNAKE_COIL_DURATION; }

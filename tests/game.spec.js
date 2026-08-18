@@ -281,4 +281,34 @@ test.describe('Bird and Snake Game Tests', () => {
     expect(gameOver).toBe(true);
     expect(gameStatus).toBe('loss');
   });
+
+  test('The game is won when the score reaches 3', async ({ page }) => {
+    await page.goto(pageUrl);
+
+    await page.evaluate(() => {
+        window.gameState.score = 3;
+        window.gameState.checkGameEnd();
+    });
+
+    const isGameOver = await page.evaluate(() => window.gameState.gameOver);
+    const status = await page.evaluate(() => window.gameState.gameStatus);
+
+    expect(isGameOver).toBe(true);
+    expect(status).toBe('win');
+  });
+
+  test('The game is lost when the score reaches -3', async ({ page }) => {
+    await page.goto(pageUrl);
+
+    await page.evaluate(() => {
+        window.gameState.score = -3;
+        window.gameState.checkGameEnd();
+    });
+
+    const isGameOver = await page.evaluate(() => window.gameState.gameOver);
+    const status = await page.evaluate(() => window.gameState.gameStatus);
+
+    expect(isGameOver).toBe(true);
+    expect(status).toBe('loss');
+  });
 });

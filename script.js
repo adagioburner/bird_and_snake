@@ -316,6 +316,7 @@ if (typeof window !== 'undefined') {
         get score() { return score; },
         get gameOver() { return gameOver; },
         set gameOver(val) { gameOver = val; },
+        get gameStatus() { return gameStatus; },
         get GAME_HEIGHT() { return GAME_HEIGHT; },
         get GAME_WIDTH() { return GAME_WIDTH; },
         get SNAKE_COIL_DURATION() { return SNAKE_COIL_DURATION; }

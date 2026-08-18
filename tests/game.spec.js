@@ -210,4 +210,40 @@ test.describe('Bird and Snake Game Tests', () => {
     const newScore = await page.evaluate(() => window.gameState.score);
     expect(newScore).toBe(initialScore - 1);
   });
+
+  test('The game ends with a loss when the score reaches -3', async ({ page }) => {
+    await page.goto(pageUrl);
+
+    // Drop 3 apples to trigger loss condition
+    await page.evaluate(() => {
+        window.gameState.gameOver = false;
+
+        // Clear existing apples
+        window.gameState.apples.length = 0;
+
+        // Push 3 apples off-screen to quickly drop score
+        for(let i=0; i<3; i++) {
+            window.gameState.apples.push({
+                x: 100 + i*10,
+                y: window.gameState.GAME_HEIGHT + 10,
+                width: 20,
+                height: 20
+            });
+        }
+    });
+
+    // Wait for game loop to process the apples (should only take 1 tick)
+    await page.waitForTimeout(100);
+
+    // Verify score is -3
+    const newScore = await page.evaluate(() => window.gameState.score);
+    expect(newScore).toBe(-3);
+
+    // Verify game is over and status is loss
+    const gameOver = await page.evaluate(() => window.gameState.gameOver);
+    const gameStatus = await page.evaluate(() => window.gameState.gameStatus);
+
+    expect(gameOver).toBe(true);
+    expect(gameStatus).toBe('loss');
+  });
 });

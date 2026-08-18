@@ -77,6 +77,21 @@ test.describe('Bird and Snake Game Tests', () => {
 
     const gameWidth = await page.evaluate(() => window.gameState.GAME_WIDTH);
     expect(reversedX).toBeLessThanOrEqual(gameWidth);
+
+    // Manually push the snake to the left edge to test reversal
+    await page.evaluate(() => {
+        window.gameState.snake.x = 0;
+        window.gameState.snake.direction = -1;
+    });
+
+    await page.waitForTimeout(100);
+
+    const leftReversedX = await page.evaluate(() => window.gameState.snake.x);
+    const leftReversedDirection = await page.evaluate(() => window.gameState.snake.direction);
+
+    // Direction should flip to 1
+    expect(leftReversedDirection).toBe(1);
+    expect(leftReversedX).toBeGreaterThanOrEqual(0);
   });
 
   test('The bird flies in the top part of the screen and flaps its wings', async ({ page }) => {
@@ -176,6 +191,26 @@ test.describe('Bird and Snake Game Tests', () => {
     expect(resumedState).toBe('moving');
   });
 
+  test('The apple is not dropped when the space bar is pressed if the game is over', async ({ page }) => {
+    await page.goto(pageUrl);
+
+    // Set game over to true
+    await page.evaluate(() => {
+        window.gameState.gameOver = true;
+    });
+
+    // Initial apples count
+    const initialCount = await page.evaluate(() => window.gameState.apples.length);
+    expect(initialCount).toBe(0);
+
+    // Press spacebar
+    await page.keyboard.press('Space');
+
+    // Verify apple was not added
+    const afterDropCount = await page.evaluate(() => window.gameState.apples.length);
+    expect(afterDropCount).toBe(0);
+  });
+
   test('The apple disappears at the bottom of the screen and score decreases', async ({ page }) => {
     await page.goto(pageUrl);
 
@@ -209,6 +244,42 @@ test.describe('Bird and Snake Game Tests', () => {
     // Verify score decreased
     const newScore = await page.evaluate(() => window.gameState.score);
     expect(newScore).toBe(initialScore - 1);
+  });
+
+  test('The game ends with a loss when the score reaches -3', async ({ page }) => {
+    await page.goto(pageUrl);
+
+    // Drop 3 apples to trigger loss condition
+    await page.evaluate(() => {
+        window.gameState.gameOver = false;
+
+        // Clear existing apples
+        window.gameState.apples.length = 0;
+
+        // Push 3 apples off-screen to quickly drop score
+        for(let i=0; i<3; i++) {
+            window.gameState.apples.push({
+                x: 100 + i*10,
+                y: window.gameState.GAME_HEIGHT + 10,
+                width: 20,
+                height: 20
+            });
+        }
+    });
+
+    // Wait for game loop to process the apples (should only take 1 tick)
+    await page.waitForTimeout(100);
+
+    // Verify score is -3
+    const newScore = await page.evaluate(() => window.gameState.score);
+    expect(newScore).toBe(-3);
+
+    // Verify game is over and status is loss
+    const gameOver = await page.evaluate(() => window.gameState.gameOver);
+    const gameStatus = await page.evaluate(() => window.gameState.gameStatus);
+
+    expect(gameOver).toBe(true);
+    expect(gameStatus).toBe('loss');
   });
 
   test('The game is won when the score reaches 3', async ({ page }) => {

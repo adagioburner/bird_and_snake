@@ -77,6 +77,21 @@ test.describe('Bird and Snake Game Tests', () => {
 
     const gameWidth = await page.evaluate(() => window.gameState.GAME_WIDTH);
     expect(reversedX).toBeLessThanOrEqual(gameWidth);
+
+    // Manually push the snake to the left edge to test reversal
+    await page.evaluate(() => {
+        window.gameState.snake.x = 0;
+        window.gameState.snake.direction = -1;
+    });
+
+    await page.waitForTimeout(100);
+
+    const leftReversedX = await page.evaluate(() => window.gameState.snake.x);
+    const leftReversedDirection = await page.evaluate(() => window.gameState.snake.direction);
+
+    // Direction should flip to 1
+    expect(leftReversedDirection).toBe(1);
+    expect(leftReversedX).toBeGreaterThanOrEqual(0);
   });
 
   test('The bird flies in the top part of the screen and flaps its wings', async ({ page }) => {

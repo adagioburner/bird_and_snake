@@ -208,12 +208,14 @@ function update(deltaTime) {
             apples[i].y < snake.y + snake.height &&
             apples[i].y + apples[i].height > snake.y
         ) {
-            score++;
+            if (snake.state !== 'coiled') {
+                score++;
+                checkGameEnd();
+            }
             snake.state = 'coiled';
             snake.coilTimer = SNAKE_COIL_DURATION; // hiss and coil for 1 second
             apples.splice(i, 1);
             i--;
-            checkGameEnd();
             continue; // move to next apple
         }
 

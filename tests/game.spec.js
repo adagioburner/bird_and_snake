@@ -246,6 +246,57 @@ test.describe('Bird and Snake Game Tests', () => {
     expect(newScore).toBe(initialScore - 1);
   });
 
+  test('Hitting coiled snake does not change score, removes apple and resets coil timer', async ({ page }) => {
+    await page.goto(pageUrl);
+
+    // Initial setup for collision
+    await page.evaluate(() => {
+        window.gameState.score = 0;
+        window.gameState.snake.state = 'coiled';
+        window.gameState.snake.coilTimer = 0.5; // Simulate a partially expired timer
+
+        // Place snake and an apple exactly on top of it
+        window.gameState.snake.x = 400;
+        window.gameState.snake.y = 500;
+        window.gameState.apples.length = 0; // Clear existing
+        window.gameState.apples.push({
+            x: 400 + 40,
+            y: 500 + 20,
+            width: 20,
+            height: 20
+        });
+    });
+
+    const initialScore = await page.evaluate(() => window.gameState.score);
+
+    // Wait for a tick to let the update loop process the collision
+    await page.waitForTimeout(100);
+
+    // Verify snake is still coiled
+    const snakeState = await page.evaluate(() => window.gameState.snake.state);
+    expect(snakeState).toBe('coiled');
+
+    // Verify coil timer is reset to SNAKE_COIL_DURATION
+    const snakeCoilTimer = await page.evaluate(() => window.gameState.snake.coilTimer);
+    const coilDuration = await page.evaluate(() => window.gameState.SNAKE_COIL_DURATION);
+
+    // We expect the timer to be roughly coilDuration, minus a tiny bit for the tick time
+    // But since it just got reset and ticked, it should be > 0.5 for sure and close to coilDuration.
+    expect(snakeCoilTimer).toBeGreaterThan(0.5);
+    expect(snakeCoilTimer).toBeLessThanOrEqual(coilDuration);
+
+    // Specifically, if a tick passes, timer is roughly coilDuration - deltaTime.
+    // If SNAKE_COIL_DURATION is 1.0, it should be around 0.9.
+
+    // Verify apple disappeared
+    const applesCount = await page.evaluate(() => window.gameState.apples.length);
+    expect(applesCount).toBe(0);
+
+    // Verify score did not change
+    const newScore = await page.evaluate(() => window.gameState.score);
+    expect(newScore).toBe(initialScore);
+  });
+
   test('The game ends with a loss when the score reaches -3', async ({ page }) => {
     await page.goto(pageUrl);
 

@@ -147,7 +147,7 @@ function initGame() {
     requestAnimationFrame(gameLoop);
 }
 
-function update(deltaTime) {
+function updateBird(deltaTime) {
     // Bird Movement
     bird.moveTimer += deltaTime;
     if (bird.moveTimer > 1) { // Change direction randomly every second
@@ -173,7 +173,9 @@ function update(deltaTime) {
         bird.isFlappingUp = !bird.isFlappingUp;
         bird.flapTimer = 0;
     }
+}
 
+function updateSnake(deltaTime) {
     // Snake movement
     if (snake.state === 'moving') {
         snake.x += snake.speed * snake.direction * deltaTime;
@@ -196,7 +198,9 @@ function update(deltaTime) {
             snake.state = 'moving';
         }
     }
+}
 
+function updateApples(deltaTime) {
     // Apples movement
     for (let i = 0; i < apples.length; i++) {
         apples[i].y += appleSpeed * deltaTime;
@@ -227,6 +231,12 @@ function update(deltaTime) {
             checkGameEnd();
         }
     }
+}
+
+function update(deltaTime) {
+    updateBird(deltaTime);
+    updateSnake(deltaTime);
+    updateApples(deltaTime);
 }
 
 function checkGameEnd() {
